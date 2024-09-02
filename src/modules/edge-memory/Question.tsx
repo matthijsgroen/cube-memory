@@ -1,5 +1,6 @@
 import { Button } from "../../components/Button";
-import { colorMap, CubeColor, edges } from "./dataset";
+import { Edge } from "../../components/Edge";
+import { colorNameMap, CubeColor, edges } from "../../helpers/edges";
 
 export type Props = {
   correctAnswer: string;
@@ -20,11 +21,14 @@ export const Question: React.FC<Props> = ({
   const start = Date.now() * 1;
 
   return (
-    <>
-      <p>
-        {colorMap[main]} - {colorMap[sub]}
+    <div>
+      <div className="flex justify-center">
+        <Edge main={main} sub={sub} />
+      </div>
+      <p className="text-center">
+        {colorNameMap[main]} - {colorNameMap[sub]}
       </p>
-      <ul>
+      <ul className="flex justify-center flex-wrap">
         {answers.map((a) => (
           <li key={a}>
             <Button
@@ -41,6 +45,6 @@ export const Question: React.FC<Props> = ({
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };

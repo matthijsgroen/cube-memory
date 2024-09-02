@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { pick } from "../../helpers/pick";
 import { shuffle } from "../../helpers/shuffle";
-import { EdgePiece, edges } from "./dataset";
 import { Question } from "./Question";
+import { EdgePiece, edges } from "../../helpers/edges";
 
 const elements: [location: string, piece: EdgePiece][] = Object.entries(edges);
 const locations: string[] = elements.map((e) => e[0]);
@@ -29,14 +29,23 @@ export const Component = () => {
     createAnswerSet(location, amountAnswers)
   );
 
+  const [amountPlayed, setAmountPlayed] = useState(0);
+  const [amountCorrect, setAmountCorrect] = useState(0);
+
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Edge memory</h1>
+      <h1 className="text-3xl font-bold underline text-center">Edge memory</h1>
+      <p>Played: {amountPlayed}</p>
+      <p>Correct: {amountCorrect}</p>
       <Question
         correctAnswer={location}
         answers={answers}
         onRespond={(data) => {
           console.log(data);
+          setAmountPlayed((a) => a + 1);
+          if (data.correct) {
+            setAmountCorrect((b) => b + 1);
+          }
 
           const newLocation = pick(locations);
           setLocation(newLocation);

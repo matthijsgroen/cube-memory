@@ -1,6 +1,6 @@
 import { Button } from "../../components/Button";
 import { Edge } from "../../components/Edge";
-import { colorNameMap, CubeColor, edges } from "../../helpers/edges";
+import { colorNameMap, CubeColor, edges } from "../../support/edges";
 
 export type Props = {
   correctAnswer: string;

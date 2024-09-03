@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { pick } from "../../helpers/pick";
-import { shuffle } from "../../helpers/shuffle";
+import { pick } from "../../support/pick";
+import { shuffle } from "../../support/shuffle";
 import { Question } from "./Question";
-import { EdgePiece, edges } from "../../helpers/edges";
+import { EdgePiece, edges } from "../../support/edges";
 
 const elements: [location: string, piece: EdgePiece][] = Object.entries(edges);
 const locations: string[] = elements.map((e) => e[0]);

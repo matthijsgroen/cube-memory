@@ -1,4 +1,4 @@
-import { colorMap, CubeColor } from "../support/edges";
+import { colorMap, CubeColor } from "@/support/edges";
 
 export type Props = {
   main: CubeColor;

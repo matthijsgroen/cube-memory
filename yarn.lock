@@ -1341,6 +1341,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/css-modules@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@types/css-modules@npm:1.0.5"
+  checksum: 10c0/56ee69ec66b726765c6b4a57e0b58665341919267cbe380f9320379e84402a17afacc13228ea1271e1ce2f049465240d553d7bfa236b1f0b87c26c561f9eb875
+  languageName: node
+  linkType: hard
+
 "@types/eslint@npm:^9":
   version: 9.6.1
   resolution: "@types/eslint@npm:9.6.1"
@@ -2077,6 +2084,7 @@ __metadata:
     "@eslint/compat": "npm:^1.1.1"
     "@eslint/js": "npm:^9.9.1"
     "@parcel/core": "npm:^2.12.0"
+    "@types/css-modules": "npm:^1.0.5"
     "@types/eslint": "npm:^9"
     "@types/react": "npm:^18.3.5"
     "@types/react-dom": "npm:^18.3.0"

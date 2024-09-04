@@ -23,7 +23,7 @@ const createAnswerSet = (correctAnswer: string, amount: number): string[] => {
 };
 
 export const Component = () => {
-  const amountAnswers = 5;
+  const amountAnswers = 3;
   const [location, setLocation] = useState(() => pick(locations));
   const [answers, setAnswers] = useState(() =>
     createAnswerSet(location, amountAnswers)
@@ -31,18 +31,33 @@ export const Component = () => {
 
   const [amountPlayed, setAmountPlayed] = useState(0);
   const [amountCorrect, setAmountCorrect] = useState(0);
+  const [isPreviousCorrect, setPreviousCorrect] = useState<boolean | null>(
+    null
+  );
 
   return (
     <div>
       <h1 className="text-3xl font-bold underline text-center">Edge memory</h1>
       <p>Played: {amountPlayed}</p>
       <p>Correct: {amountCorrect}</p>
+      <div className="text-center text-white font-bold">
+        {isPreviousCorrect === true && (
+          <p className="animate-result" key={amountPlayed}>
+            ✅ Correct!
+          </p>
+        )}
+        {isPreviousCorrect === false && (
+          <p className="animate-result" key={amountPlayed}>
+            ❌ Wrong
+          </p>
+        )}
+      </div>
       <Question
         correctAnswer={location}
         answers={answers}
         onRespond={(data) => {
-          console.log(data);
           setAmountPlayed((a) => a + 1);
+          setPreviousCorrect(data.correct);
           if (data.correct) {
             setAmountCorrect((b) => b + 1);
           }

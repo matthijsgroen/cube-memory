@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+
 import { App } from "./App";
 
 const router = createBrowserRouter([
@@ -7,20 +8,11 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/edge-memory",
+    path: "/letters",
     children: [
-      {
-        index: true,
-        lazy: () => import("../modules/edge-memory/games/Index"),
-      },
-      {
-        path: "practice",
-        lazy: () => import("../modules/edge-memory/games/Practice"),
-      },
-      {
-        path: "challenge",
-        lazy: () => import("../modules/edge-memory/games/Challenge"),
-      },
+      { index: true, lazy: () => import("../modules/letters/Index") },
+      { path: "learn", lazy: () => import("../modules/letters/Learn") },
+      { path: "drill", lazy: () => import("../modules/letters/Drill") },
     ],
   },
 ]);

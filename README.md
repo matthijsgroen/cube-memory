@@ -1,6 +1,8 @@
 # Cube Memory
 
-A Set of games to train blindfolded 3x3 cube solving
+A Set of games to train blindfolded 3x3 cube solving.
+
+Play it at https://matthijsgroen.github.io/cube-memory/
 
 - Edge memory
 

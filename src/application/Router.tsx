@@ -15,6 +15,6 @@ const router = createBrowserRouter([
       { path: "drill", lazy: () => import("../modules/letters/Drill") },
     ],
   },
-]);
+], { basename: import.meta.env.BASE_URL });
 
 export default router;

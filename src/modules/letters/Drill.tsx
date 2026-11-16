@@ -58,8 +58,10 @@ export const Component: React.FC = () => {
     setFeedback(false);
   };
 
-  const answer = (value: string) => {
-    const char = value.slice(-1);
+  // `typed` is the inserted text of one input event: null for paste/delete,
+  // so only a single typed letter counts as an answer.
+  const answer = (typed: string | null) => {
+    const char = typed ?? "";
     if (!/^[a-x]$/i.test(char) || feedback || !current) return;
     setTimes((t) => t.concat(Date.now() - askedAt.current));
 
@@ -133,10 +135,11 @@ export const Component: React.FC = () => {
           ref={inputRef}
           value={input}
           onChange={(e) => {
-            answer(e.target.value);
+            answer((e.nativeEvent as InputEvent).data);
             setInput("");
           }}
-          disabled={feedback}
+          // readOnly, not disabled: keeps focus so the phone keyboard stays open
+          readOnly={feedback}
           autoFocus
           autoCapitalize="off"
           autoComplete="off"
@@ -149,7 +152,13 @@ export const Component: React.FC = () => {
           Het was {current.letter.toUpperCase()}
         </p>
       )}
-      <button className="underline" onClick={() => setMode(null)}>
+      <button
+        className="underline"
+        onClick={() => {
+          setFeedback(false);
+          setMode(null);
+        }}
+      >
         Stoppen
       </button>
     </div>

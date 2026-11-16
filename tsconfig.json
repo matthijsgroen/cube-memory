@@ -102,5 +102,5 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   }
 ,
-  "exclude": ["src/**/*.test.mts"]
+  "exclude": ["src/**/*.test.mts", "vite.config.mts", "dist"]
 }

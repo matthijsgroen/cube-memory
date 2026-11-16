@@ -55,6 +55,7 @@ export const Component: React.FC = () => {
     setTotal(q.length);
     setMissed([]);
     setTimes([]);
+    setFeedback(false);
   };
 
   const answer = (value: string) => {
@@ -68,11 +69,18 @@ export const Component: React.FC = () => {
     }
     setMissed((m) => (m.includes(current.letter) ? m : m.concat(current.letter)));
     setFeedback(true);
-    setTimeout(() => {
+  };
+
+  // After a wrong answer: show the letter, then move the sticker to the back.
+  // Cleanup cancels it when the round is stopped mid-feedback.
+  useEffect(() => {
+    if (!feedback) return;
+    const timer = setTimeout(() => {
       setQueue((q) => q.slice(1).concat(q[0]));
       setFeedback(false);
     }, FEEDBACK_MS);
-  };
+    return () => clearTimeout(timer);
+  }, [feedback]);
 
   if (mode === null) {
     return (

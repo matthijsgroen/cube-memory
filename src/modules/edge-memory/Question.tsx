@@ -5,15 +5,17 @@ import { colorNameMap, CubeColor, edges } from "@/support/edges";
 export type Props = {
   correctAnswer: string;
   answers: string[];
+  timeLimit?: number;
   onRespond?: (response: {
     time: number;
-    answer: string;
+    answer: string | null;
     correct: boolean;
   }) => void;
 };
 
 export const Question: React.FC<Props> = ({
   correctAnswer,
+  timeLimit = Infinity,
   answers,
   onRespond,
 }) => {

@@ -8,7 +8,20 @@ const router = createBrowserRouter([
   },
   {
     path: "/edge-memory",
-    lazy: () => import("../modules/edge-memory/EdgeMemory"),
+    children: [
+      {
+        index: true,
+        lazy: () => import("../modules/edge-memory/games/Index"),
+      },
+      {
+        path: "practice",
+        lazy: () => import("../modules/edge-memory/games/Practice"),
+      },
+      {
+        path: "challenge",
+        lazy: () => import("../modules/edge-memory/games/Challenge"),
+      },
+    ],
   },
 ]);
 

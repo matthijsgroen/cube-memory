@@ -1,13 +1,12 @@
-import { NavLink } from "react-router-dom";
-import styles from "./menu.module.css";
+import { Menu } from "@/components/Menu";
 
 export const App = () => {
   return (
-    <ol className={styles.menu}>
-      <li>
-        <NavLink to="/edge-memory">Cube edge memory</NavLink>
-      </li>
-      <li>Cube corner memory</li>
-    </ol>
+    <Menu
+      menuEntries={[
+        { path: "/edge-memory", name: "Cube edge memory" },
+        { path: "/corner-memory", name: "Cube corner memory" },
+      ]}
+    />
   );
 };

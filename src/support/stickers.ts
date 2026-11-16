@@ -53,3 +53,22 @@ export const stickers: Sticker[] = faces.flatMap((face, f) => [
     col,
   })),
 ]);
+
+export const faceName: Record<Face, string> = {
+  U: "Wit",
+  L: "Oranje",
+  F: "Groen",
+  R: "Rood",
+  B: "Blauw",
+  D: "Geel",
+};
+
+// Each face owns 4 consecutive letters: U = A–D, L = E–H, ...
+export const faceRange = (face: Face) => {
+  const f = faces.indexOf(face);
+  return `${letterAt(f, 0)}–${letterAt(f, 3)}`;
+};
+
+export const inFaceRange = (sticker: Sticker, char: string) =>
+  Math.floor((char.toUpperCase().charCodeAt(0) - 65) / 4) ===
+  faces.indexOf(sticker.face);

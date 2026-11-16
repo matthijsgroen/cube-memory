@@ -3,9 +3,22 @@ import { NavLink } from "react-router-dom";
 
 import { CubeNet } from "@/components/CubeNet";
 import { shuffle } from "@/support/shuffle";
-import { PieceType, Sticker, stickers } from "@/support/stickers";
+import {
+  faceName,
+  faceRange,
+  inFaceRange,
+  PieceType,
+  Sticker,
+  stickers,
+} from "@/support/stickers";
 
 type Mode = PieceType | "mixed";
+type Level = "range" | "exact";
+
+const levels: [Level, string][] = [
+  ["range", "Reeks"],
+  ["exact", "Exacte letter"],
+];
 
 const modes: [Mode, string][] = [
   ["edge", "Zijdes"],
@@ -29,6 +42,7 @@ const newQueue = (mode: Mode): Sticker[] => {
 };
 
 export const Component: React.FC = () => {
+  const [level, setLevel] = useState<Level>("range");
   const [mode, setMode] = useState<Mode | null>(null);
   const [queue, setQueue] = useState<Sticker[]>([]);
   const [total, setTotal] = useState(0);
@@ -65,7 +79,11 @@ export const Component: React.FC = () => {
     if (!/^[a-x]$/i.test(char) || feedback || !current) return;
     setTimes((t) => t.concat(Date.now() - askedAt.current));
 
-    if (char.toLowerCase() === current.letter.toLowerCase()) {
+    const correct =
+      level === "range"
+        ? inFaceRange(current, char)
+        : char.toLowerCase() === current.letter.toLowerCase();
+    if (correct) {
       setQueue((q) => q.slice(1));
       return;
     }
@@ -88,6 +106,19 @@ export const Component: React.FC = () => {
     return (
       <div className="py-10 flex flex-col items-center gap-4">
         <h1 className="text-2xl font-bold">Wat wil je oefenen?</h1>
+        <div className="flex gap-2 mb-2">
+          {levels.map(([l, label]) => (
+            <button
+              key={l}
+              onClick={() => setLevel(l)}
+              className={`px-3 py-1 rounded-md border-2 border-black ${
+                level === l ? "bg-green-500" : "bg-slate-200"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         {modes.map(([m, label]) => (
           <button key={m} className={`${buttonClass} w-48`} onClick={() => start(m)}>
             {label}
@@ -130,7 +161,8 @@ export const Component: React.FC = () => {
       </p>
       <CubeNet show={feedback ? current.type : "none"} highlight={current} />
       <label className="flex flex-col items-center gap-2 text-xl">
-        Welke letter? ({current.type === "edge" ? "zijde" : "hoek"})
+        {level === "range" ? "Letter uit welke reeks?" : "Welke letter?"} (
+        {current.type === "edge" ? "zijde" : "hoek"})
         <input
           ref={inputRef}
           value={input}
@@ -149,7 +181,9 @@ export const Component: React.FC = () => {
       </label>
       {feedback && (
         <p className="text-xl font-bold text-red-200">
-          Het was {current.letter.toUpperCase()}
+          {level === "range"
+            ? `${faceName[current.face]} = ${faceRange(current.face)}`
+            : `Het was ${current.letter.toUpperCase()}`}
         </p>
       )}
       <button

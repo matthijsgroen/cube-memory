@@ -124,7 +124,7 @@ export const Component: React.FC = () => {
             {label}
           </button>
         ))}
-        <NavLink to=".." className="underline">
+        <NavLink to="/" className="underline">
           Terug
         </NavLink>
       </div>

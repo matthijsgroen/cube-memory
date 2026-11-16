@@ -1,3 +1,7 @@
 .menu {
-  @apply text-2xl text-center h-1/3 justify-center flex flex-col gap-4;
+  @apply text-2xl text-center flex flex-col gap-4;
+}
+
+.menu a {
+  @apply block w-48 px-4 py-2 rounded-md border-2 border-black bg-green-500;
 }

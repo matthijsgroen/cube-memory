@@ -27,7 +27,7 @@ export const Component: React.FC = () => {
         ))}
       </div>
       <CubeNet show={show} />
-      <NavLink to=".." className="text-center underline">
+      <NavLink to="/" className="text-center underline">
         Terug
       </NavLink>
     </div>

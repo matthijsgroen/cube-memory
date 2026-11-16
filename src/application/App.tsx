@@ -1,5 +1,16 @@
 import { Menu } from "@/components/Menu";
 
 export const App = () => (
-  <Menu menuEntries={[{ path: "/letters", name: "Sticker letters" }]} />
+  <div className="py-10 px-4 flex flex-col items-center gap-6">
+    <h1 className="text-3xl font-bold">Cube Memory</h1>
+    <p className="text-center max-w-sm">
+      Train de Speffz-letters voor blind oplossen: eerst leren, dan oefenen.
+    </p>
+    <Menu
+      menuEntries={[
+        { path: "/letters/learn", name: "Leren" },
+        { path: "/letters/drill", name: "Oefenen" },
+      ]}
+    />
+  </div>
 );

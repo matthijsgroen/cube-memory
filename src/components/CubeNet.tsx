@@ -27,7 +27,7 @@ export const CubeNet: React.FC<Props> = ({ show, highlight }) => (
     {faces.map((face) => (
       <div
         key={face}
-        className={`${cell} ${faceColor[face]} ${highlight ? "opacity-30" : ""}`}
+        className={`${cell} ${faceColor[face]} ${highlight ? "opacity-30" : ""} !text-black/30 text-xs`}
         style={position(face, 1, 1)}
       >
         {face}

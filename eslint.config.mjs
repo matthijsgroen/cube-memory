@@ -51,8 +51,8 @@ export default [
       "react/prop-types": "off", // Does not work nicely with React.FC TS declarations
 
       // Enable these if your TSConfig is preserve and you don't need a React import in scope for JSX
-      // "react/react-in-jsx-scope": "off",
-      // "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-uses-react": "off",
 
       "@typescript-eslint/no-unused-vars": [
         "error",

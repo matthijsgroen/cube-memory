@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+
 import { stickers } from "./stickers.ts";
 
 const find = (letter: string) => stickers.find((s) => s.letter === letter)!;

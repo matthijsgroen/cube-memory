@@ -4,7 +4,8 @@
   "scripts": {
     "start": "parcel serve src/index.html",
     "lint": "eslint src/",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "NODE_OPTIONS= node --test src/**/*.test.mts"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",

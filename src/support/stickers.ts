@@ -82,10 +82,10 @@ export const faceFill: Record<Face, string> = {
   D: "fill-yellow-300",
 };
 
-type Vec = [number, number, number];
+export type Vec = [number, number, number];
 
 // 3D frame: x = right (R), y = up (U), z = front (F).
-const normal: Record<Face, Vec> = {
+export const normal: Record<Face, Vec> = {
   U: [0, 1, 0],
   D: [0, -1, 0],
   F: [0, 0, 1],
@@ -95,7 +95,7 @@ const normal: Record<Face, Vec> = {
 };
 
 // Cubie position of a sticker, following how each face is drawn in the net.
-const cubie = ({ face, row, col }: Sticker): Vec => {
+export const cubie = ({ face, row, col }: Sticker): Vec => {
   const x = col - 1;
   const y = 1 - row;
   switch (face) {
@@ -114,12 +114,12 @@ const cubie = ({ face, row, col }: Sticker): Vec => {
   }
 };
 
-const cross = (a: Vec, b: Vec): Vec => [
+export const cross = (a: Vec, b: Vec): Vec => [
   a[1] * b[2] - a[2] * b[1],
   a[2] * b[0] - a[0] * b[2],
   a[0] * b[1] - a[1] * b[0],
 ];
-const dot = (a: Vec, b: Vec) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+export const dot = (a: Vec, b: Vec) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
 /**
  * The piece holding `sticker`, viewed with that sticker on top.

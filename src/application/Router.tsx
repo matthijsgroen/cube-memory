@@ -14,6 +14,7 @@ const router = createBrowserRouter([
       { path: "drill", lazy: () => import("../modules/letters/Drill") },
     ],
   },
+  { path: "/chains", lazy: () => import("../modules/chains/Chains") },
   {
     path: "/words",
     children: [

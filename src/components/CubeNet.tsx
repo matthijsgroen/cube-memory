@@ -3,6 +3,8 @@ import { Face, faceColor, faces, PieceType, Sticker, stickers } from "@/support/
 export type Props = {
   show: PieceType | "both" | "none";
   highlight?: Sticker;
+  // Scrambled cube: state[position] = index of the sticker there (see support/cube).
+  state?: number[];
 };
 
 // Net layout in 3x3-face units: U on top, L F R B in a row, D below.
@@ -22,7 +24,7 @@ const position = (face: Face, row: number, col: number) => ({
 
 const cell = "aspect-square rounded-md border border-black/40 flex items-center justify-center font-bold text-black select-none";
 
-export const CubeNet: React.FC<Props> = ({ show, highlight }) => (
+export const CubeNet: React.FC<Props> = ({ show, highlight, state }) => (
   <div className="grid grid-cols-12 gap-0.5 w-full max-w-xl mx-auto px-4 text-sm sm:text-lg">
     {faces.map((face) => (
       <div
@@ -33,7 +35,7 @@ export const CubeNet: React.FC<Props> = ({ show, highlight }) => (
         {face}
       </div>
     ))}
-    {stickers.map((s) => {
+    {stickers.map((s, i) => {
       const isHighlight = s === highlight;
       // ponytail: with a highlight, only that sticker may reveal its letter (drill feedback)
       const showLetter =
@@ -41,7 +43,7 @@ export const CubeNet: React.FC<Props> = ({ show, highlight }) => (
       return (
         <div
           key={s.letter}
-          className={`${cell} ${faceColor[s.face]} ${
+          className={`${cell} ${faceColor[stickers[state?.[i] ?? i].face]} ${
             highlight && !isHighlight ? "opacity-30" : ""
           } ${isHighlight ? "ring-4 ring-black z-10 animate-pulse" : ""}`}
           style={position(s.face, s.row, s.col)}

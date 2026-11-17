@@ -3,10 +3,13 @@ import { NavLink } from "react-router-dom";
 
 import { CubeNet } from "@/components/CubeNet";
 import { Piece } from "@/components/Piece";
-import { shuffle } from "@/support/shuffle";
+import { answerCard, Card, DeckOptions, newDeck } from "@/support/deck";
 import {
+  Face,
+  faceColor,
   faceName,
   faceRange,
+  faces,
   inFaceRange,
   PieceType,
   Sticker,
@@ -15,6 +18,8 @@ import {
 
 type Mode = PieceType | "mixed";
 type Level = "range" | "exact" | "piece";
+// Level 3 practises one top colour at a time (4 or 8 stickers), or everything.
+type Group = Face | "all";
 
 const levels: [Level, string][] = [
   ["range", "1 · Reeks"],
@@ -37,16 +42,24 @@ const msFormatter = new Intl.NumberFormat("nl-NL", {
 const buttonClass =
   "px-4 py-2 rounded-md border-2 border-black bg-green-500 text-xl";
 
-const newQueue = (mode: Mode): Sticker[] => {
-  const queue = stickers.filter((s) => mode === "mixed" || s.type === mode);
-  shuffle(queue);
-  return queue;
-};
+// Small set: every sticker right 3× in a row, a miss returns after 2 others.
+// Full set: one pass, a miss goes to the back.
+const smallSet: DeckOptions = { target: 3, retryGap: 2 };
+const fullSet: DeckOptions = { target: 1, retryGap: Infinity };
+
+const setStickers = (mode: Mode, set: Group): Sticker[] =>
+  stickers.filter(
+    (s) => (mode === "mixed" || s.type === mode) && (set === "all" || s.face === set),
+  );
+
+const nextSet = (set: Group): Group =>
+  set === "all" ? "all" : faces[(faces.indexOf(set) + 1) % faces.length];
 
 export const Component: React.FC = () => {
   const [level, setLevel] = useState<Level>("range");
+  const [set, setSet] = useState<Group>("U");
   const [mode, setMode] = useState<Mode | null>(null);
-  const [queue, setQueue] = useState<Sticker[]>([]);
+  const [queue, setQueue] = useState<Card<Sticker>[]>([]);
   const [total, setTotal] = useState(0);
   const [missed, setMissed] = useState<string[]>([]);
   const [times, setTimes] = useState<number[]>([]);
@@ -55,7 +68,10 @@ export const Component: React.FC = () => {
   const askedAt = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const current = queue[0];
+  const activeSet: Group = level === "piece" ? set : "all";
+  const options = activeSet === "all" ? fullSet : smallSet;
+  const current = queue[0]?.item;
+  const learned = total - new Set(queue.map((c) => c.item.letter)).size;
 
   // Restart the clock and keyboard focus whenever a new sticker is asked.
   useEffect(() => {
@@ -64,8 +80,9 @@ export const Component: React.FC = () => {
     inputRef.current?.focus();
   }, [current, feedback]);
 
-  const start = (m: Mode) => {
-    const q = newQueue(m);
+  const start = (m: Mode, s: Group = activeSet) => {
+    const q = newDeck(setStickers(m, s));
+    if (level === "piece") setSet(s);
     setMode(m);
     setQueue(q);
     setTotal(q.length);
@@ -86,23 +103,23 @@ export const Component: React.FC = () => {
         ? inFaceRange(current, char)
         : char.toLowerCase() === current.letter.toLowerCase();
     if (correct) {
-      setQueue((q) => q.slice(1));
+      setQueue((q) => answerCard(q, true, options));
       return;
     }
     setMissed((m) => (m.includes(current.letter) ? m : m.concat(current.letter)));
     setFeedback(true);
   };
 
-  // After a wrong answer: show the letter, then move the sticker to the back.
-  // Cleanup cancels it when the round is stopped mid-feedback.
+  // After a wrong answer: show the letter, then put the sticker back in the
+  // deck. Cleanup cancels it when the round is stopped mid-feedback.
   useEffect(() => {
     if (!feedback) return;
     const timer = setTimeout(() => {
-      setQueue((q) => q.slice(1).concat(q[0]));
+      setQueue((q) => answerCard(q, false, options));
       setFeedback(false);
     }, FEEDBACK_MS);
     return () => clearTimeout(timer);
-  }, [feedback]);
+  }, [feedback, options]);
 
   if (mode === null) {
     return (
@@ -121,6 +138,37 @@ export const Component: React.FC = () => {
             </button>
           ))}
         </div>
+        {level === "piece" && (
+          <div className="flex flex-col items-center gap-2 mb-2 px-4">
+            <p>Kleur bovenop</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {faces.map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setSet(f)}
+                  className={`px-2 py-1 rounded-md border-2 text-black ${faceColor[f]} ${
+                    set === f ? "border-black ring-2 ring-white" : "border-black/30"
+                  }`}
+                >
+                  {faceRange(f)}
+                </button>
+              ))}
+              <button
+                onClick={() => setSet("all")}
+                className={`px-2 py-1 rounded-md border-2 border-black ${
+                  set === "all" ? "bg-green-500" : "bg-slate-200"
+                }`}
+              >
+                Alles
+              </button>
+            </div>
+            <p className="text-sm max-w-xs text-center">
+              {set === "all"
+                ? "Alle blokjes, één keer."
+                : `Alleen ${faceName[set].toLowerCase()} bovenop: elk blokje ${smallSet.target}× achter elkaar goed.`}
+            </p>
+          </div>
+        )}
         {modes.map(([m, label]) => (
           <button key={m} className={`${buttonClass} w-48`} onClick={() => start(m)}>
             {label}
@@ -147,6 +195,11 @@ export const Component: React.FC = () => {
           <button className={buttonClass} onClick={() => start(mode)}>
             Opnieuw
           </button>
+          {activeSet !== "all" && (
+            <button className={buttonClass} onClick={() => start(mode, nextSet(activeSet))}>
+              Volgende set
+            </button>
+          )}
           <button className={buttonClass} onClick={() => setMode(null)}>
             Andere set
           </button>
@@ -158,7 +211,9 @@ export const Component: React.FC = () => {
   return (
     <div className="py-6 flex flex-col items-center gap-4">
       <p className="text-lg">
-        {total - queue.length + 1} / {total}
+        {activeSet === "all"
+          ? `${total - queue.length + 1} / ${total}`
+          : `${faceName[activeSet]} · ${learned} / ${total} geleerd`}
         {missed.length > 0 && ` · ${missed.length} fout`}
       </p>
       {level === "piece" ? (

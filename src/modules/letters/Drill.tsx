@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import { CubeNet } from "@/components/CubeNet";
+import { Piece } from "@/components/Piece";
 import { shuffle } from "@/support/shuffle";
 import {
   faceName,
@@ -13,11 +14,12 @@ import {
 } from "@/support/stickers";
 
 type Mode = PieceType | "mixed";
-type Level = "range" | "exact";
+type Level = "range" | "exact" | "piece";
 
 const levels: [Level, string][] = [
-  ["range", "Reeks"],
-  ["exact", "Exacte letter"],
+  ["range", "1 · Reeks"],
+  ["exact", "2 · Op de kubus"],
+  ["piece", "3 · Los blokje"],
 ];
 
 const modes: [Mode, string][] = [
@@ -106,7 +108,7 @@ export const Component: React.FC = () => {
     return (
       <div className="py-10 flex flex-col items-center gap-4">
         <h1 className="text-2xl font-bold">Wat wil je oefenen?</h1>
-        <div className="flex gap-2 mb-2">
+        <div className="flex flex-wrap justify-center gap-2 mb-2 px-4">
           {levels.map(([l, label]) => (
             <button
               key={l}
@@ -159,7 +161,11 @@ export const Component: React.FC = () => {
         {total - queue.length + 1} / {total}
         {missed.length > 0 && ` · ${missed.length} fout`}
       </p>
-      <CubeNet show={feedback ? current.type : "none"} highlight={current} />
+      {level === "piece" ? (
+        <Piece sticker={current} letter={feedback ? current.letter : undefined} />
+      ) : (
+        <CubeNet show={feedback ? current.type : "none"} highlight={current} />
+      )}
       <label className="flex flex-col items-center gap-2 text-xl">
         {level === "range" ? "Letter uit welke reeks?" : "Welke letter?"} (
         {current.type === "edge" ? "zijde" : "hoek"})
